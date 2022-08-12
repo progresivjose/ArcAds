@@ -9,8 +9,10 @@ export function initializeGPT() {
   window.googletag = window.googletag || {};
   window.googletag.cmd = window.googletag.cmd || [];
 
-  appendResource('script', '//securepubads.g.doubleclick.net/tag/js/gpt.js', true, true);
-  sendLog('initializeGPT()', 'Appended googletag script to the head tag of the page.', null);
+  if (Object.keys(window.googletag).length == 1 && window.googletag.cmd.length == 0) {
+    appendResource('script', '//securepubads.g.doubleclick.net/tag/js/gpt.js', true, true);
+    sendLog('initializeGPT()', 'Appended googletag script to the head tag of the page.', null);
+  }
 }
 
 /**

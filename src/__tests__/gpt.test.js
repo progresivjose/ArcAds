@@ -7,6 +7,7 @@ import * as gpt from '../services/gpt';
 import * as headerbidding from '../services/headerbidding';
 import * as sizemap from '../services/sizemapping';
 import * as queryUtil from '../util/query';
+import * as resources from '../util/resources';
 
 describe('arcads', () => {
   const methods = {
@@ -204,6 +205,46 @@ describe('arcads', () => {
       jest.spyOn(queryUtil, 'expandQueryString').mockReturnValue('overrideSlotname');
       const result = gpt.determineSlotName('dfpCode', 'testSlotname');
       expect(result).toEqual('/dfpCode/overrideSlotname');
+    });
+  });
+
+  describe('initializeGPT', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    
+    it('should include the GPT afer call the initialization', () => {
+      global.googletag = undefined;
+
+      const spyAppendResource = jest.spyOn(resources, 'appendResource').mockImplementation();
+
+      gpt.initializeGPT();
+
+      expect(spyAppendResource).toHaveBeenCalledWith('script', '//securepubads.g.doubleclick.net/tag/js/gpt.js', true, true);
+    });
+
+    it("should call the append resource method only once if the gpt is already loaded", () => {
+      global.googletag = undefined;
+
+      const spyAppendResource = jest.spyOn(resources, 'appendResource').mockImplementation(() => {
+        global.googletag = {
+          defineSlot: () => global.googletag,
+          defineOutOfPageSlot: () => global.googletag,
+          defineSizeMapping: () => global.googletag,
+          addService: () => global.googletag,
+          setTargeting: () => global.googletag,
+          pubads: () => global.googletag,
+          refresh: () => global.googletag,
+          cmd: []
+        }
+      });
+
+      gpt.initializeGPT();
+      gpt.initializeGPT();
+      gpt.initializeGPT();
+      gpt.initializeGPT();
+
+      expect(spyAppendResource).toHaveBeenCalledTimes(1);
     });
   });
 });
