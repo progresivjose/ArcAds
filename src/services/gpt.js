@@ -9,10 +9,18 @@ export function initializeGPT() {
   window.googletag = window.googletag || {};
   window.googletag.cmd = window.googletag.cmd || [];
 
-  if (Object.keys(window.googletag).length == 1 && window.googletag.cmd.length == 0) {
+  if (!isGPTLoaded()) {
     appendResource('script', '//securepubads.g.doubleclick.net/tag/js/gpt.js', true, true);
     sendLog('initializeGPT()', 'Appended googletag script to the head tag of the page.', null);
   }
+}
+
+/**
+ * @desc Checks if the googletag object is fully loaded
+ * @returns {boolean}
+ */
+function isGPTLoaded() {
+  return Object.keys(window.googletag).length > 1;
 }
 
 /**
