@@ -1,6 +1,6 @@
 {
   "name": "@abc-color/arcads",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "ArcAds is a GPT wrapper created by Arc XP with publishers in mind.",
   "main": "dist/arcads.js",
   "files": [
